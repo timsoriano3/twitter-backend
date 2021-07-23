@@ -50,7 +50,7 @@ describe('Register Route Methods', () => {
 
     // Testing for a UNREGISTERED USER
     describe('POST, unregistered user registration.', () => {
-        it('Should be type json, with 3 elements, and successfully register unregistered user', (done) => {
+        it('Should be type json, with 4 elements, and successfully register unregistered user, returns session info', (done) => {
             
             // Generates a new unique string of letters and digits
             // Passes on to variable name to be used as new username for registration
@@ -70,6 +70,7 @@ describe('Register Route Methods', () => {
                     expect(res.body).to.have.property('success').eq(true);
                     expect(res.body).to.have.property('username').eq(name);
                     expect(res.body).to.have.property('status').eq("Registration Successful!");
+                    expect(res.body).to.have.property('session');
                     done();                  
                 });
         });

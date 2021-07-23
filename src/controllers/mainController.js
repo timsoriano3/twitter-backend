@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const userSchema = require('./src/models/User');
+
+const userSchema = require('../models/User');
 
 const User = mongoose.model('User', userSchema);
 
@@ -12,7 +13,7 @@ exports.requireLogin = (req, res, next) => {
 };
 
 
-// middleware for register .post methos
+// middleware for register .post method
 exports.registerUser = async (req, res) => {
     if (!req.body.username || !req.body.password) {
         return res.status(500).json({
@@ -34,8 +35,9 @@ exports.registerUser = async (req, res) => {
                 req.session.user = user;
                 res.status(200).json({
                     success: true,
-                    username: user.username, 
-                    status: 'Registration Successful!'
+                    username: user.username,
+                    status: 'Registration Successful!',
+                    session: req.session.user
                 });
             }
         });
@@ -50,7 +52,7 @@ exports.registerUser = async (req, res) => {
 };
 
 
-// middlewar for login .post method
+// middleware for login .post method
 exports.loginUser = async (req, res) => {
     // Check if either username or password field is empty
     if (!req.body.username || !req.body.password) {
@@ -71,7 +73,8 @@ exports.loginUser = async (req, res) => {
             return res.status(200).json({
                 success: true, 
                 username: user.username, 
-                status: 'Login Successful!'
+                status: 'Login Successful!',
+                session: req.session.user
             });
         } else {
             // If password does not match

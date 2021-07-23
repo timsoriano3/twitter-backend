@@ -27,7 +27,7 @@ describe('Login Route Methods', () => {
     // Testing POST method for loginRoute
     // Testing for a REGISTERED USER
     describe('POST, registered user login.', () => {
-        it('Should be type json, with 3 elements, and successfully log in registered user', (done) => {
+        it('Should be type json, with 4 elements, and successfully log in registered user, returns session info', (done) => {
             const sample = {
                 username: "jordan",
                 password: "23"
@@ -42,6 +42,7 @@ describe('Login Route Methods', () => {
                     expect(res.body).to.have.property('success').eq(true);
                     expect(res.body).to.have.property('username').eq('jordan');
                     expect(res.body).to.have.property('status').eq("Login Successful!");
+                    expect(res.body).to.have.property('session');
                     done();                  
                 });
         });
@@ -71,7 +72,7 @@ describe('Login Route Methods', () => {
 
     // Testing for an empty password field
     describe('POST, empty password login.', () => {
-        it('Should be type json, with 1 element, unsuccessful log in with message \'... fields cannot be empty!\'', (done) => {
+        it('Should be type json, with 2 element, unsuccessful log in with message \'... fields cannot be empty!\'', (done) => {
             const sample = {
                 username: "jordan",
                 password: ""
