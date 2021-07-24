@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const Message = require('../models/Message');
+const Chat = require('../models/Chat');
 
 mongoose.set('useFindAndModify', false);
 
 
 // middleware for ("/") .post method for messageRoute
+// function to post message to chat with chatId as params
 exports.messagePost = (req, res) => {
     if (!req.body.content) {
         console.log("Content must not be empty!");
@@ -35,6 +37,7 @@ exports.messagePost = (req, res) => {
 
 
 // middleware for chatRoute /:chatId/messages .get method
+// function to get all messages in the chat under given chatId
 exports.chatIdMessagesGet = async (req, res) => {
         
     var messages;

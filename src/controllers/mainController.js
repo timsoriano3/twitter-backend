@@ -33,7 +33,7 @@ exports.registerUser = async (req, res) => {
                 res.status(500).json({ err: err });
             } else {
                 req.session.user = user;
-                res.status(200).json({
+                res.status(201).json({
                     success: true,
                     username: user.username,
                     status: 'Registration Successful!',
@@ -78,7 +78,7 @@ exports.loginUser = async (req, res) => {
             });
         } else {
             // If password does not match
-            return res.status(500).json({
+            return res.status(400).json({
                 success: false,
                 username: req.body.username,
                 message: `Wrong password for ${req.body.username}`

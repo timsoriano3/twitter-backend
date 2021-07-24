@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Chat = require('../models/Chat');
-const Message = require('../models/Message');
 
 const userSchema = require('../models/User');
 const User = mongoose.model('User', userSchema);
@@ -21,9 +20,9 @@ exports.chatPost = async (req, res) => {
             if (err) {
                 res.status(500).json({ err: err });
             } else {
-                return res.status(200).json({
+                return res.status(201).json({
                     success: true,
-                    users: chat.users,
+                    chat: chat,
                     isGroup: isGroup,
                     status: "chat created!"
                 });
@@ -54,7 +53,7 @@ exports.chatPost = async (req, res) => {
             const user = await User.findOne({username: reqUsers.username});
     
             // if reqUsers are registered users,
-            // then add chatUser to users array
+            // then add chat user to users array, adding the username for better display
             if(user)  users.push(user.username);
     
             // only when # of users in the array are equal to the # users in request body
@@ -135,7 +134,7 @@ exports.chatIdGet = async (req, res) => {
     if(!getChat) {
         res.status(400).json({message: "no chat found under logged in user and chatId"});
     } else {
-        res.status(200).json({success: true, getChat});
+        res.status(200).json({success: true, chat: getChat});
     }
     
 };
