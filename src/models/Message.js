@@ -6,10 +6,6 @@ const messageSchema = new Schema({
         type: mongoose.Schema.Types.String,
         ref: 'User'
     },
-/*     toUsers: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'User'
-    }], */
     content: {
         type: String,
         required: true,

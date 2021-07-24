@@ -1,6 +1,6 @@
 const express = require('express');
 
-// chats middlewares for from chatController.js
+// middlewares for all chat functions from chatController.js
 const { 
     chatPost, 
     chatGet, 
@@ -24,7 +24,7 @@ chatRouter.route("/")
     chatGet
     )
 
-    // Creating a chat
+    // Creating a new chat
     .post((req, res, next) => {
         console.log("attempting chat");
         next();

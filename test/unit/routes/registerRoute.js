@@ -48,7 +48,7 @@ describe('Register Route Methods', () => {
         });
     });
 
-    // Testing for a UNREGISTERED USER
+    // Testing for an UNREGISTERED USER
     describe('POST, unregistered user registration.', () => {
         it('Should be type json, with 4 elements, and successfully register unregistered user, returns session info', (done) => {
             
@@ -65,7 +65,7 @@ describe('Register Route Methods', () => {
                 .send(sample)
                 .end((err, res) => {
                     expect(err).to.be.null;
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(201);
                     expect(res).to.be.json;
                     expect(res.body).to.have.property('success').eq(true);
                     expect(res.body).to.have.property('username').eq(name);

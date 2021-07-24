@@ -4,6 +4,7 @@ const userSchema = require('../models/User');
 
 const User = mongoose.model('User', userSchema);
 
+// session middleware for requiring login
 exports.requireLogin = (req, res, next) => {
     if (req.session && req.session.user) {
         return next();
@@ -14,7 +15,9 @@ exports.requireLogin = (req, res, next) => {
 
 
 // middleware for register .post method
+// function to register new user
 exports.registerUser = async (req, res) => {
+    // check if username or password fields are empty in request
     if (!req.body.username || !req.body.password) {
         return res.status(500).json({
             success: false,
@@ -22,12 +25,15 @@ exports.registerUser = async (req, res) => {
         });
     }
     
+    // create new user in db
     var newUser = new User(req.body);
 
+    // Find user by username to chech if user already exists
     var user = await User.findOne({ username: req.body.username });
 
     if (user == null) {
         // if username doesnt already exist in db
+        // save user into db
         newUser.save((err, user) => {
             if (err) {
                 res.status(500).json({ err: err });
@@ -53,6 +59,7 @@ exports.registerUser = async (req, res) => {
 
 
 // middleware for login .post method
+// function to log in user
 exports.loginUser = async (req, res) => {
     // Check if either username or password field is empty
     if (!req.body.username || !req.body.password) {

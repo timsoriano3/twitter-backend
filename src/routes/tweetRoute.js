@@ -1,6 +1,6 @@
 const express = require('express');
 
-// chats middlewares for from chatController.js
+// middlewares for all tweet functions from tweetController.js
 const { 
     tweetGet,
     tweetPost,
@@ -17,7 +17,7 @@ app.use(express.json());
 
 
 tweetRouter.route("/")
-    // Get all tweets under logged in user
+    // Get all the tweets
     .get((req, res, next) => {
         console.log("Getting all tweets by logged in user");
         next();
@@ -34,12 +34,15 @@ tweetRouter.route("/")
     )
 
 tweetRouter.route("/:tweetId")
+    // getting a tweet with specific tweet id
     .get((req, res, next) => {
         console.log("Getting a tweet by tweetId and reading its content");
         next();
     },
     tweetIdGet
     )
+
+    // updating the content of a tweet with specific tweet id
     .put((req, res, next) => {
         console.log("Updating a tweet");
         next();
@@ -47,6 +50,7 @@ tweetRouter.route("/:tweetId")
     tweetIdPut
     )
 
+    // deleting a tweet with specific tweet id
     .delete((req, res, next) => {
         console.log("Deleting a tweet");
         next();
