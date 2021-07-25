@@ -110,27 +110,25 @@ exports.chatIdPut = async (req, res) => {
 // middleware for chatRoute /:chatId .get method
 // function to get the chat data of specified chat
 exports.chatIdGet = async (req, res) => {
+     
+    try {
         
-    var getChat;
+        // find a chat under logged in user with the given chatId
+        const chat = await Chat.findOne({ 
+            _id: req.params.chatId, 
+            users: { $elemMatch: { $eq: req.session.user.username } } 
+        });
 
-    // find a chat under logged in user with the given chatId
-    await Chat.findOne({ 
-        _id: req.params.chatId, 
-        users: { $elemMatch: { $eq: req.session.user.username } } 
-    }
-    , (err, chat) => {
+        if (!chat) {
+            return res.status(404).json({message: "Chat not found!"});
+        }
+
+        res.status(200).json({success: true, chat: chat});
+
+    } catch (err) {
         if (err) {
             res.status(400).json({err: err});
-        } else {
-            // set getChat to equal found chat
-            getChat = chat;
         }
-    });
-
-    if(!getChat) {
-        res.status(400).json({message: "no chat found under logged in user and chatId"});
-    } else {
-        res.status(200).json({success: true, chat: getChat});
     }
     
 };

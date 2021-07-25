@@ -357,4 +357,139 @@ describe('Tweet Route Methods', () => {
                 });
         });  
     });
+
+
+
+
+
+    // Testing PUT method for tweetRoute ('/:tweetId/likes')
+    // Testing if we can like/unlike a tweet by its id,
+    describe('DELETE, a tweet by its ID', () => {
+    
+        it('Should be type json, with 3 elements, and successfully like/unlike the tweet, ' + 
+        'should return \'Successfully liked / unliked tweet\' under status field', (done) => {
+            
+            var tweetId = '60fb24190959502a8f787852';
+            /*
+            other tweet id's:
+            60fb348020d1bd397be78935
+            60fb346e20d1bd397be78931
+            60fb347820d1bd397be78933
+            60fc1d5c8243ce2bbee93ae3
+            */
+
+            chai.request(app)
+                userLogin
+                .put('/tweets/' + tweetId + '/likes')
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    expect(err).to.be.null;
+                    expect(res).to.have.status(200);
+                    expect(res).to.be.json;
+                    expect(res.body).to.have.property('status').eq('Successfully liked / unliked tweet');
+                    expect(res.body).to.have.property('totalLikes').eq(res.body.tweet.likes.length);                    
+                    expect(res.body).to.have.property('tweet');                    
+                    done();
+                });
+        });  
+        
+        
+
+        it('Should be type json, and unsuccessfully like the tweet with specified, ' + 
+        'ID, should return error message because tweet was not found in db', (done) => {
+            
+            var tweetId = '60fb24190959502a8f783456';
+            /*
+            other tweet id's:
+            60fb348020d1bd397be78935
+            60fb346e20d1bd397be78931
+            60fb347820d1bd397be78933
+            60fc1d5c8243ce2bbee93ae3
+            */
+
+            chai.request(app)
+                otherUserLogin
+                .put('/tweets/' + tweetId + '/likes')
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    expect(err).to.be.null;
+                    expect(res).to.have.status(404);
+                    expect(res).to.be.json;
+                    expect(res.body).to.have.property('message').eq('Specified tweet was not found!');
+                    done();
+                });
+        });  
+    });
+
+
+
+
+
+
+    // Testing POST method for tweetRoute ('/:tweetId/retweet')
+    // Testing if we can retweet/unretweet a tweet by its id,
+    describe('POST, a retweet', () => {
+    
+        it('Should be type json, with 3 elements, and successfully retweet/unretweet the tweet, ' + 
+        'should return \'Successfully retweet / unretweeted tweet\' under status field', (done) => {
+            
+            var tweetId = '60fb24190959502a8f787852';
+            /*
+            other tweet id's:
+            60fb348020d1bd397be78935
+            60fb346e20d1bd397be78931
+            60fb347820d1bd397be78933
+            60fc1d5c8243ce2bbee93ae3
+            */
+
+            chai.request(app)
+                userLogin
+                .post('/tweets/' + tweetId + '/retweets')
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    expect(err).to.be.null;
+                    expect(res).to.have.status(201);
+                    expect(res).to.be.json;
+                    expect(res.body).to.have.property('status').eq('Successfully retweeted / unretweeted tweet');
+                    expect(res.body).to.have.property('retweetedBy').eq(user.username);                    
+                    expect(res.body).to.have.property('newTweet');                    
+                    done();
+                });
+        });  
+        
+        
+
+        it('Should be type json, and unsuccessfully retweet the tweet with specified, ' + 
+        'ID, should return error message because tweet id was not found in db', (done) => {
+            
+            var tweetId = '60fb24190959502a8f783456';
+            /*
+            other tweet id's:
+            60fb348020d1bd397be78935
+            60fb346e20d1bd397be78931
+            60fb347820d1bd397be78933
+            60fc1d5c8243ce2bbee93ae3
+            */
+
+            chai.request(app)
+                otherUserLogin
+                .post('/tweets/' + tweetId + '/retweets')
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    expect(err).to.be.null;
+                    expect(res).to.have.status(404);
+                    expect(res).to.be.json;
+                    expect(res.body).to.have.property('message').eq('Specified tweet was not found!');
+                    done();
+                });
+        });  
+    });
 });

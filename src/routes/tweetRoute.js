@@ -6,11 +6,13 @@ const {
     tweetPost,
     tweetIdGet,
     tweetIdPut,
-    tweetIdDelete
+    tweetIdDelete,
+    tweetIdLike,
+    tweetIdRetweet
 } = require('../controllers/tweetController');
 
 const app = express();
-const tweetRouter = express.Router();
+const tweetRouter = express.Router({mergeParams: true});
 
 // body-parser
 app.use(express.json());
@@ -56,6 +58,24 @@ tweetRouter.route("/:tweetId")
         next();
     },
     tweetIdDelete
+    );
+
+// liking/unliking a tweet
+tweetRouter.route('/:tweetId/likes')
+    .put( async (req, res, next) => {
+        console.log("Attempting to like/unlike tweet");
+        next();
+    },
+    tweetIdLike
+    );
+
+// retweeting a tweet
+tweetRouter.route('/:tweetId/retweets')
+    .post( async (req, res, next) => {
+        console.log("Attempting to retweet a tweet");
+        next();
+    },
+    tweetIdRetweet
     );
 
 module.exports = tweetRouter;

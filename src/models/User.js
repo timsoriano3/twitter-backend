@@ -14,6 +14,14 @@ const userSchema = new Schema({
     createdAt: {
         type: String,
         default: Date.now
+    },
+    likes: [{
+        type: mongoose.Schema.Types.String,
+        ref: 'Tweet'
+    }],
+    retweets: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tweet'
     }
 });
 

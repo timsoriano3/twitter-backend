@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Tweet = require('../models/Tweet');
 
+const userSchema = require('../models/User');
+const User = mongoose.model('User', userSchema);
+
 mongoose.set('useFindAndModify', false);
 
 
@@ -164,6 +167,115 @@ exports.tweetIdDelete = async (req, res) => {
         });
     } catch (err) {
         if (err) {
+            res.status(400).json({err: err});
+        }
+    }
+};
+
+
+
+
+
+
+// middleware for ("/:tweetId/likes") .put method for tweetRoute
+// function for liking/unliking a posted tweet
+exports.tweetIdLike = async (req, res) => {
+    
+    // if logged in user has any likes and,
+    // one of those likes includes the tweet provided by the tweetId params,
+    // then set liked to $pull in place of the $set operator to unlike the tweet
+    // otherwise set liked to $addToSet to like the tweet
+    const liked = 
+        (req.session.user.likes && req.session.user.likes.includes(req.params.tweetId)) 
+        ? "$pull" : "$addToSet";
+    
+    try {
+        // finding User by id and updating its likes property by adding/deleting tweet id from likes
+        // then setting the logged in user's value equal to the new updated user
+        req.session.user = await User.findByIdAndUpdate(req.session.user._id, { [liked]: { likes: req.params.tweetId }}, {new: true});
+        
+
+        // finding a tweet by id and updating its likes property
+        const tweet = await Tweet.findByIdAndUpdate(req.params.tweetId, { [liked]: { likes: req.session.user.username }}, {new: true});
+        
+        // if no tweet found under specified tweetId
+        if (!tweet) {
+            console.log("Specified tweet was not found!");
+            return res.status(404).json({message: 'Specified tweet was not found!'});
+        }
+
+        console.log("Tweet likes updated to:");
+        console.log(tweet.likes);
+        res.status(200).json({
+            status: 'Successfully liked / unliked tweet',
+            totalLikes: tweet.likes.length,
+            tweet: tweet
+        });
+
+    } catch(err) {
+        if (err) {
+            console.log(err);
+            res.status(400).json({err: err});
+        }
+    }
+};
+
+
+
+
+
+
+// middleware for ("/:tweetId/retweet") .post method for tweetRoute
+// function for retweeting a posted tweet
+exports.tweetIdRetweet = async (req, res) => {
+    
+    try {    
+        
+        // find tweet that is retweeted by the logged in user
+        const deleted = await Tweet.findOneAndDelete({ 
+            tweetedBy: req.session.user.username, 
+            retweetedTweet: req.params.tweetId
+        });
+
+        // if logged in user has retweeted the specified tweet,
+        // then set retweeted to $pull in place of the $set operator to unretweet the retweeted tweet
+        // otherwise set liked to $addToSet to retweet the tweet
+        var retweeted = deleted ? "$pull" : "$addToSet";
+        var retweet = deleted;
+        
+        // if logged in user has not retweeted the specified tweet,
+        // create new tweet
+        if (!retweet) {
+            retweet = await Tweet.create({
+                tweetedBy: req.session.user.username,
+                retweetedTweet: req.params.tweetId
+            });
+        }
+
+        // finding User by id and updating its retweets property by adding/deleting retweet id from retweets
+        // then setting the logged in user's value equal to the new updated user
+        req.session.user = await User.findByIdAndUpdate(req.session.user._id, { [retweeted]: { retweets: retweet._id }}, {new: true});
+
+        // finding a tweet by id and updating its retweetByUsers property
+        const tweet = await Tweet.findByIdAndUpdate(req.params.tweetId, { [retweeted]: { retweetByUsers: req.session.user.username }}, {new: true});
+        
+        // if no tweet found under specified tweetId
+        if (!tweet) {
+            console.log("Specified tweet was not found!");
+            return res.status(404).json({message: 'Specified tweet was not found!'});
+        }
+
+        console.log("Tweet likes updated to:");
+        console.log(tweet.likes);
+        res.status(201).json({
+            status: 'Successfully retweeted / unretweeted tweet',
+            retweetedBy: req.session.user.username,
+            newTweet: tweet
+        });
+
+    } catch(err) {
+        if (err) {
+            console.log(err);
             res.status(400).json({err: err});
         }
     }

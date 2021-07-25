@@ -9,6 +9,18 @@ const tweetSchema = new Schema({
     tweetedBy: {
         type: mongoose.Schema.Types.String,
         ref: 'User'
+    },
+    likes: [{
+        type: mongoose.Schema.Types.String,
+        ref: 'User'
+    }],
+    retweetByUsers: [{
+        type: mongoose.Schema.Types.String,
+        ref: 'User'
+    }],
+    retweetedTweet: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tweet'
     }
 }, {
     timestamps: true

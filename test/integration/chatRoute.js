@@ -179,9 +179,9 @@ describe('Chat Route Methods', () => {
                         console.log(err);
                     }
                     expect(err).to.be.null;
-                    expect(res).to.have.status(400);
+                    expect(res).to.have.status(404);
                     expect(res).to.be.json;
-                    expect(res.body).to.have.property('message').eq('no chat found under logged in user and chatId');
+                    expect(res.body).to.have.property('message').eq('Chat not found!');
                     done();
                 });
         });
