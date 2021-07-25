@@ -364,7 +364,7 @@ describe('Tweet Route Methods', () => {
 
     // Testing PUT method for tweetRoute ('/:tweetId/likes')
     // Testing if we can like/unlike a tweet by its id,
-    describe('DELETE, a tweet by its ID', () => {
+    describe('PUT, a tweet by its ID', () => {
     
         it('Should be type json, with 3 elements, and successfully like/unlike the tweet, ' + 
         'should return \'Successfully liked / unliked tweet\' under status field', (done) => {
